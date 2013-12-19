@@ -833,16 +833,45 @@ bool readData(std::vector<std::string> &data, int n)
     }
 }
 
+int countSubStr(std::string subStr, std::string str)
+{
+    int k = 0;
+    if(subStr.length() < str.length() / 2 + 1)
+    {
+        for(int i = 0; i < str.length() - subStr.length(); i++)
+            if(str.compare(i, subStr.length(), subStr) == 0)
+                k++;
+    }
+    return k;
+}
+
 void reciprocalCycles(int n)
 {
     std::vector<std::string> values;
     readData(values, n);
 
     for(int i = 0; i < values.size(); i++)
-        std::cout << i + 1 << " " << values[i] << std::endl;
+    {
+        int max = 0;
+        std::string temp = values[i];
+        std::string subStr = "";
+        for(int j = 0; j < temp.length(); j++)
+        {
+            subStr += temp[j];
+            if(countSubStr(subStr, temp) > 1)
+                if(max < subStr.length())
+                {
+                    max = subStr.length();
+                }
+        }
+        std::cout << max << "\t" << subStr << "\t" << temp << "\t" << i + 1 << std::endl;
+
+    }
+//        std::cout << i + 1 << " " << values[i] << std::endl;
 }
 
 int main(int argc, char *argv[])
 {
+//    std::cout << countSubStr("asd", "sdassdkdfasdnasd");
     reciprocalCycles(1000);
 }
