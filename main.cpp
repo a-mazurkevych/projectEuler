@@ -822,56 +822,110 @@ void _1000_digitFibonacciNumber()
 
 // Problem 26
 
-bool readData(std::vector<std::string> &data, int n)
-{
-    for(double i = 1; i < n; i++)
-    {
-        double v = 1 / i;
-        std::stringstream stream;
-        stream << std::fixed << std::setprecision(65) << v << std::endl;
-        data.push_back(stream.str().substr(2, stream.str().size() - 3));
-    }
-}
-
-int countSubStr(std::string subStr, std::string str)
-{
-    int k = 0;
-    if(subStr.length() < str.length() / 2 + 1)
-    {
-        for(int i = 0; i < str.length() - subStr.length(); i++)
-            if(str.compare(i, subStr.length(), subStr) == 0)
-                k++;
-    }
-    return k;
-}
-
 void reciprocalCycles(int n)
 {
-    std::vector<std::string> values;
-    readData(values, n);
-
-    for(int i = 0; i < values.size(); i++)
+    int seqLenght = 0;
+    for(int i = 1000; i > 1; i--)
     {
-        int max = 0;
-        std::string temp = values[i];
-        std::string subStr = "";
-        for(int j = 0; j < temp.length(); j++)
-        {
-            subStr += temp[j];
-            if(countSubStr(subStr, temp) > 1)
-                if(max < subStr.length())
-                {
-                    max = subStr.length();
-                }
-        }
-        std::cout << max << "\t" << subStr << "\t" << temp << "\t" << i + 1 << std::endl;
+        if(seqLenght >= i)
+            break;
+        int* foundRemainders = new int[i];
+        int value = 1;
+        int pos = 0;
 
+        while(foundRemainders[value] == 0 && value != 0)
+        {
+            foundRemainders[value] = pos;
+            value *= 10;
+            value %= i;
+            pos++;
+        }
+
+        if(pos - foundRemainders[value] > seqLenght)
+            seqLenght = pos - foundRemainders[value];
+
+        std::cout << seqLenght << "\t" << pos << std::endl;
     }
-//        std::cout << i + 1 << " " << values[i] << std::endl;
+}
+
+//Problem 27
+
+bool isPrime(int v)
+{
+    for(int i = 2; i < v / 2 + 1; i++)
+        if(v % i == 0)
+        {
+            return false;
+            break;
+        }
+    return true;
+}
+
+void quadraticPrimes()
+{
+    int res = 1, maxN = 0;
+    for(int a = -999; a < 1000; a++)
+        for(int b = -999; b < 1000; b++)
+        {
+            int n = 0;
+            while(isPrime(abs(n * n + n * a + b)))
+                n++;
+            if(n > maxN)
+            {
+                maxN = n;
+                res = a * b;
+            }
+        }
+    std::cout << res << std::endl;
+}
+
+//Problem 28
+
+void numberSpiralDiagonals(int range)
+{
+    int res = 0;
+    for(int i = range; i > 1; i = i - 2)
+    {
+        res += (i * i) + (i * i - (i - 1)) + (i * i - 2 * (i - 1)) + (i * i - 3 * (i - 1));
+    }
+    res += 1;
+    std::cout << res << std::endl;
+}
+
+// Problem 29
+
+typedef boost::multiprecision::cpp_int li;
+
+li liPow(li x, li y)
+{
+    li res = 1;
+    for(li i = 0; i < y; i++)
+        res *= x;
+    return res;
+}
+
+void distinctPowers(int range)
+{
+    std::vector<li> res;
+    for(li i = 2; i <= range; i++)
+        for(li j = 2; j <= range; j++)
+            res.push_back(liPow(i, j));
+
+    std::cout << res.size() << std::endl;
+
+    int n = res.size();
+    for(int i = 0; i < res.size(); i++)
+    {
+        std::cout << i << std::endl;
+        li temp = res[i];
+        for(int j = i + 1; res.size(); j++)
+            if(temp == res[j])
+                n--;
+    }
+    std::cout << n << std::endl;
 }
 
 int main(int argc, char *argv[])
 {
-//    std::cout << countSubStr("asd", "sdassdkdfasdnasd");
-    reciprocalCycles(1000);
+    distinctPowers(100);
 }
